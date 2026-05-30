@@ -11,8 +11,7 @@ regioes = []
 def menu():
     while True:
         try:
-            resposta = int(input("""
-[1] - Resumo sobre o Climex
+            resposta = int(input(f"""\n[1] - Resumo sobre o Climex
 [2] - Cadastro de região para monitoramento ambiental
 [3] - Análise de Vulnerabilidade climática
 [4] - Listagem de todos os cadastros
@@ -23,13 +22,16 @@ def menu():
 
             match resposta:
                 case 1:
-                    print(resumo_climex())
+                    mensagem_retorno = resumo_climex()
+                    print(f"\n{mensagem_retorno}")
                 case 2:
-                    cadastro_regiao_monitorada()
+                    dict_cadastrado = cadastro_regiao_monitorada()
+                    print(f"\nRegião cadastrada: {dict_cadastrado}")
                 case 3:
-                    print("Em desenvolvimento")
+                    mensagem_retorno = analisa_vulnerabilidade_climatica()
+                    print(f"\n{mensagem_retorno}")
                 case 4:
-                    print("Em desenvolvimento")
+                    listar_regioes()
                 case 5:
                     print("Em desenvolvimento")
                 case 6:
@@ -45,65 +47,156 @@ def menu():
 
 #Opção 1 do menu
 def resumo_climex():
-    return """
-O ClimaX é uma plataforma inteligente de monitoramento climático urbano que integra APIs meteorológicas, sensores IoT e análise de dados em Python para identificar regiões vulneráveis a ilhas de calor e baixa umidade na Região Metropolitana de São Paulo. O sistema processa indicadores ambientais em tempo real para gerar mapas interativos, classificação de risco automático e alertas estratégicos, auxiliando órgãos públicos e comunidades na tomada de decisões preventivas e no planejamento de ações urbanas sustentáveis."""
+    return """O ClimaX é uma plataforma inteligente de monitoramento climático urbano que integra APIs meteorológicas, sensores IoT e análise de dados em Python para identificar regiões vulneráveis a ilhas de calor e baixa umidade na Região Metropolitana de São Paulo. O sistema processa indicadores ambientais em tempo real para gerar mapas interativos, classificação de risco automático e alertas estratégicos, auxiliando órgãos públicos e comunidades na tomada de decisões preventivas e no planejamento de ações urbanas sustentáveis."""
 
 #Opção 2 do menu
 def cadastro_regiao_monitorada():
     try:
+        opcoes_indices = [1,2,3]
+
+        regiao = input("\nQual região você deseja cadastrar:\n").title().strip()
+        
         while True:
-            opcoes_indices = [1,2,3]
+            try:
+                temperatura_media = float(input("\nQual a temperatura média da região informada:\n"))
 
-            regiao = input("Qual região você deseja cadastrar:\n").title().strip()
-            
-            while True:
-                try:
-                    temperatura_media = float(input("Qual a temperatura média da região informada:\n"))
+                if temperatura_media < -20 or temperatura_media > 50:
+                    print("Temperatura inválida, favor selecionar uma temperatura válida")
+                else:
+                    break
+            except ValueError:
+                print("Entrada inválida, favor selecionar uma temperatura válida")
 
-                    if temperatura_media < -20 or temperatura_media > 50:
-                        print("Temperatura inválida, favor selecionar uma temperatura válida")
-                    else:
-                        break
-                except ValueError:
-                    print("Entrada inválida, favor selecionar uma temperatura válida")
+        while True:
+            try:
+                indice_umidade = int(input(f"\nQual o indice de umidade do ar da região informada: \n[1] - Alta\n[2] - Média\n[3] - Baixa\n"))
 
-            while True:
-                try:
-                    indice_umidade = int(input(f"Qual o indice de umidade do ar da região informada: \n[1] - Alta\n[2] - Média\n[3] - Baixa\n"))
-
-                    if indice_umidade in opcoes_indices:
-                        break
-                    print("Entrada inválida, favor selecionar uma opção entre 1 e 3")
-                except ValueError:
-                    print("Entrada inválida, favor selecionar um índice válido")
+                if indice_umidade in opcoes_indices:
+                    break
+                print("Entrada inválida, favor selecionar uma opção entre 1 e 3")
+            except ValueError:
+                print("Entrada inválida, favor selecionar um índice válido")
 
 
-            while True:
-                try:
-                    indice_arborizacao = int(input(f"Qual o indice de arborização da região informada: \n[1] - Alto\n[2] - Médio\n[3] - Baixo\n"))
+        while True:
+            try:
+                indice_arborizacao = int(input(f"\nQual o indice de arborização da região informada: \n[1] - Alto\n[2] - Médio\n[3] - Baixo\n"))
 
-                    if indice_arborizacao in opcoes_indices:
-                        break
-                    print("Entrada inválida, favor selecionar uma opção entre 1 e 3")
-                except ValueError:
-                    print("Entrada inválida, favor selecionar um índice válido")
+                if indice_arborizacao in opcoes_indices:
+                    break
+                print("Entrada inválida, favor selecionar uma opção entre 1 e 3")
+            except ValueError:
+                print("Entrada inválida, favor selecionar um índice válido")
 
-            risco = "Não Analisado"
+        risco = "Não Analisado"
 
-            dict_regiao = {
-                "nome": regiao, 
-                "temperatura": temperatura_media,
-                "umidade": indice_umidade,
-                "arborizacao": indice_arborizacao,
-                "risco": risco
-            }
-            regioes.append(dict_regiao)
+        dict_regiao = {
+            "nome": regiao, 
+            "temperatura": temperatura_media,
+            "umidade": indice_umidade,
+            "arborizacao": indice_arborizacao,
+            "risco": risco
+        }
+        regioes.append(dict_regiao)
 
-            print(f"Região cadastrada: {dict_regiao}")
-            break
-
+        return dict_regiao
     except ValueError:
         print("Valor inválido, favor selecionar valores condizentes com o menu!")
 
+#Opção 3 do menu
+def analisa_vulnerabilidade_climatica():
+    if not regioes:
+        print("Nenhuma região cadastrada para análise.")
+        return
 
+    for obj in regioes:
+        umidade = obj["umidade"]
+        arborizacao = obj["arborizacao"]
+        temperatura = obj["temperatura"]  
+
+        if (umidade == 3 and arborizacao == 3) or (umidade == 3 and arborizacao == 2) or (umidade == 2 and arborizacao == 3):
+            obj["risco"] = "Crítico"
+
+        elif (umidade == 1 and arborizacao == 1) or (umidade == 1 and arborizacao == 2) or (umidade == 2 and arborizacao == 1):
+            obj["risco"] = "Baixo"
+
+        else:
+            obj["risco"] = "Moderado"
+
+        if temperatura >= 30.0:
+            if obj["risco"] == "Moderado":
+                obj["risco"] = "Crítico"
+            elif obj["risco"] == "Baixo":
+                obj["risco"] = "Moderado"
+
+        elif temperatura <= 18.0:
+            if obj["risco"] == "Crítico":
+                obj["risco"] = "Moderado"
+            elif obj["risco"] == "Moderado":
+                obj["risco"] = "Baixo"
+
+    return "Análise de vulnerabilidade climática atualizada para todas as regiões!"
+
+#Opçao 4 do menu
+def listar_regioes():
+    print("\n")
+    print("=" * 25)
+    print("REGIÕES MONITORADAS")
+    print("=" * 25)
+    print("\n")
+    
+    if not regioes:
+        print("Nenhuma região cadastrada.")
+        return 
+    
+    for indice, regiao in enumerate(regioes, start=1):
+        print(f"{indice})")
+        print(f"Nome: {regiao["nome"]}")
+        print(f"Temperatura: {regiao["temperatura"]}")
+        print(f"Umidade: {regiao["umidade"]}")
+        print(f"Arborização: {regiao["arborizacao"]}")
+        print(f"Risco: {regiao["risco"]}")
+
+#Opção 5 do menu
+def gerar_relatorio():
+    print("\n")
+    if not regioes:
+        print("Nenhuma região cadastrada.")
+        return 
+    
+    print("=" * 25)
+    print("RELATÓRIO AMBIENTAL")
+    print("=" * 25)
+    print("\n")
+    
+    print(f"Total de regiões: {len(regioes)}")
+    
+    alto = 0
+    medio = 0
+    baixo = 0
+    temperatura_soma = 0
+    regioes_criticas = []
+    
+    
+    for regiao in regioes:
+        if regiao["risco"] == "Baixo": baixo += 1
+        elif regiao["risco"] == "Moderado": medio += 1
+        elif regiao["risco"] == "Crítico": 
+            alto += 1
+            regioes_criticas.append(regiao["nome"])
+        temperatura_soma += regiao["temperatura"]
+        
+    print(f"Risco Baixo: {baixo}")
+    print(f"Risco Moderado: {medio}")
+    print(f"Risco Crítico: {alto}")
+    
+    print(f"Temperatura Média: {temperatura_soma / len(regioes):.1f}°C")
+    
+    print("Regiões mais vulneráveis: ")
+    if not regioes_criticas:
+        print("Parabéns não existe nenhuma região vulnerável")
+    else:
+        for indice, i in enumerate(regioes_criticas, start= 1):
+            print(f"{indice}) {i}")
+        
 menu()
