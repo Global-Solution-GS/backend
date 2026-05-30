@@ -25,7 +25,8 @@ def menu():
                     mensagem_retorno = resumo_climex()
                     print(f"\n{mensagem_retorno}")
                 case 2:
-                    dict_cadastrado = cadastro_regiao_monitorada()
+                    opcoes_indices = [1,2,3]
+                    dict_cadastrado = cadastro_regiao_monitorada(opcoes_indices)
                     print(f"\nRegião cadastrada: {dict_cadastrado}")
                 case 3:
                     mensagem_retorno = analisa_vulnerabilidade_climatica()
@@ -33,7 +34,7 @@ def menu():
                 case 4:
                     listar_regioes()
                 case 5:
-                    print("Em desenvolvimento")
+                    gerar_relatorio()
                 case 6:
                     print("Em desenvolvimento")
                 case 0:
@@ -50,10 +51,8 @@ def resumo_climex():
     return """O ClimaX é uma plataforma inteligente de monitoramento climático urbano que integra APIs meteorológicas, sensores IoT e análise de dados em Python para identificar regiões vulneráveis a ilhas de calor e baixa umidade na Região Metropolitana de São Paulo. O sistema processa indicadores ambientais em tempo real para gerar mapas interativos, classificação de risco automático e alertas estratégicos, auxiliando órgãos públicos e comunidades na tomada de decisões preventivas e no planejamento de ações urbanas sustentáveis."""
 
 #Opção 2 do menu
-def cadastro_regiao_monitorada():
+def cadastro_regiao_monitorada(opcoes_indices):
     try:
-        opcoes_indices = [1,2,3]
-
         regiao = input("\nQual região você deseja cadastrar:\n").title().strip()
         
         while True:
