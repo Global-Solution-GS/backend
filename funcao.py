@@ -1,8 +1,10 @@
 #Opçao 4
-def todas_regioes():
+def listar_regioes():
+    print("\n")
     print("=" * 25)
     print("REGIÕES MONITORADAS")
     print("=" * 25)
+    print("\n")
     
     if not regioes:
         print("Nenhuma região cadastrada.")
@@ -17,7 +19,8 @@ def todas_regioes():
         print(f"Risco: {regiao["risco"]}")
     
 #Opção 5 do menu
-def relatorio():
+def gerar_relatorio():
+    print("\n")
     if not regioes:
         print("Nenhuma região cadastrada.")
         return 
@@ -25,6 +28,7 @@ def relatorio():
     print("=" * 25)
     print("RELATÓRIO AMBIENTAL")
     print("=" * 25)
+    print("\n")
     
     print(f"Total de regiões: {len(regioes)}")
     
