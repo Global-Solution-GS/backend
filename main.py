@@ -7,6 +7,7 @@
 #6. Sugestao climatica para os casos extremos -> Alisson
 
 regioes = []
+regioes_criticas = []
 
 def menu():
     while True:
@@ -36,7 +37,7 @@ def menu():
                 case 5:
                     gerar_relatorio()
                 case 6:
-                    print("Em desenvolvimento")
+                    gerar_recomendacao()
                 case 0:
                     print("Muito obrigado pela atenção!")
                     break
@@ -105,8 +106,7 @@ def cadastro_regiao_monitorada(opcoes_indices):
 #Opção 3 do menu
 def analisa_vulnerabilidade_climatica():
     if not regioes:
-        print("Nenhuma região cadastrada para análise.")
-        return
+        return "Nenhuma região cadastrada para análise."
 
     for obj in regioes:
         umidade = obj["umidade"]
@@ -134,6 +134,9 @@ def analisa_vulnerabilidade_climatica():
             elif obj["risco"] == "Moderado":
                 obj["risco"] = "Baixo"
 
+        if(obj["risco"] == "Crítico"):
+            regioes_criticas.append(obj["nome"])                
+
     return "Análise de vulnerabilidade climática atualizada para todas as regiões!"
 
 #Opçao 4 do menu
@@ -147,18 +150,17 @@ def listar_regioes():
     if not regioes:
         print("Nenhuma região cadastrada.")
         return 
-    
+
     for indice, regiao in enumerate(regioes, start=1):
         print(f"{indice})")
         print(f"Nome: {regiao["nome"]}")
         print(f"Temperatura: {regiao["temperatura"]}")
-        print(f"Umidade: {regiao["umidade"]}")
-        print(f"Arborização: {regiao["arborizacao"]}")
+        print(f"Umidade: {valida_indice(regiao["umidade"], "Umidade")}")
+        print(f"Arborização: {valida_indice(regiao["arborizacao"], "Arborização")}")
         print(f"Risco: {regiao["risco"]}")
 
 #Opção 5 do menu
 def gerar_relatorio():
-    print("\n")
     if not regioes:
         print("Nenhuma região cadastrada.")
         return 
@@ -166,36 +168,68 @@ def gerar_relatorio():
     print("=" * 25)
     print("RELATÓRIO AMBIENTAL")
     print("=" * 25)
-    print("\n")
     
     print(f"Total de regiões: {len(regioes)}")
     
     alto = 0
     medio = 0
     baixo = 0
+    nao_definido = 0
     temperatura_soma = 0
-    regioes_criticas = []
-    
-    
+
     for regiao in regioes:
         if regiao["risco"] == "Baixo": baixo += 1
         elif regiao["risco"] == "Moderado": medio += 1
         elif regiao["risco"] == "Crítico": 
             alto += 1
-            regioes_criticas.append(regiao["nome"])
+        else: nao_definido +=1
         temperatura_soma += regiao["temperatura"]
         
     print(f"Risco Baixo: {baixo}")
     print(f"Risco Moderado: {medio}")
     print(f"Risco Crítico: {alto}")
+    print(f"Risco Não Definido: {nao_definido}")
     
     print(f"Temperatura Média: {temperatura_soma / len(regioes):.1f}°C")
     
     print("Regiões mais vulneráveis: ")
     if not regioes_criticas:
-        print("Parabéns não existe nenhuma região vulnerável")
+        print("Não existe nenhuma região vulnerável cadastrada hoje.")
     else:
         for indice, i in enumerate(regioes_criticas, start= 1):
             print(f"{indice}) {i}")
-        
+
+#Opção 6 do menu
+def gerar_recomendacao():
+    print("=" * 25)
+    print("RECOMENDAÇÕES SUSTENTÁVEIS")
+    print("=" * 25)
+    
+    print("Regiões: ")
+    
+    if not regioes_criticas:
+        print("Não existe nenhuma região vulnerável cadastrada!")
+    else:
+        for indice, i in enumerate(regioes_criticas, start= 1):
+            print(f"{indice}) {i}")
+        print("Nível de risco: CRÍTICO")
+        print("Ações sugeridas: ")
+        print("Aumentar arborização urbana\nCriar áreas verdes\nImplantar hortas comunitárias\nIntensificar monitoramento climático\nInstalar sensores ambientais")
+
+def valida_indice(valor, tipo):
+    if(valor == 1 and tipo == "Umidade"):
+        return "Alta"
+    elif(valor == 2 and tipo == "Umidade"):
+        return "Média"
+    elif(valor == 3 and tipo == "Umidade"):
+        return "Baixa"
+
+    elif(valor == 1 and tipo == "Arborização"):
+        return "Alto"
+    elif(valor == 2 and tipo == "Arborização"):
+        return "Médio"
+    elif(valor == 3 and tipo == "Arborização"):
+        return "Baixo"
+
+
 menu()
