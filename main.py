@@ -39,7 +39,7 @@ def menu():
                 case 6:
                     gerar_recomendacao()
                 case 0:
-                    print("Muito obrigado pela atenção!")
+                    print("Muito obrigado por utilizar o ClimaX, até breve!")
                     break
                 case _:
                     print("Valor inválido, favor selecionar uma das opções do menu!")
