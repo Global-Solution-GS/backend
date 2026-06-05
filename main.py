@@ -28,7 +28,7 @@ def menu():
                 case 2:
                     opcoes_indices = [1,2,3]
                     dict_cadastrado = cadastro_regiao_monitorada(opcoes_indices)
-                    print(f"\nRegião cadastrada: {dict_cadastrado}")
+                    print(f"\nRegião cadastrada: \n{dict_cadastrado}")
                 case 3:
                     mensagem_retorno = analisa_vulnerabilidade_climatica()
                     print(f"\n{mensagem_retorno}")
@@ -98,8 +98,14 @@ def cadastro_regiao_monitorada(opcoes_indices):
             "risco": risco
         }
         regioes.append(dict_regiao)
-
-        return dict_regiao
+        
+        return (
+    f"Nome: {regiao}\n"
+    f"Temperatura: {temperatura_media}°C\n"
+    f"Umidade: {valida_indice(indice_umidade, 'Umidade')}\n"
+    f"Arborização: {valida_indice(indice_arborizacao, 'Arborização')}\n"
+    f"Risco: {risco}"
+) 
     except ValueError:
         print("Valor inválido, favor selecionar valores condizentes com o menu!")
 
