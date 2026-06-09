@@ -114,6 +114,8 @@ def analisa_vulnerabilidade_climatica():
     if not regioes:
         return "Nenhuma região cadastrada para análise."
 
+    regioes_criticas.clear()
+
     for obj in regioes:
         umidade = obj["umidade"]
         arborizacao = obj["arborizacao"]
